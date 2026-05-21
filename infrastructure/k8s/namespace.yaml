@@ -4,3 +4,4 @@ metadata:
   name: healthos
   labels:
     name: healthos
+    environment: production

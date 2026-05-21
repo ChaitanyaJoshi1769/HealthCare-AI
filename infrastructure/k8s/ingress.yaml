@@ -1,0 +1,51 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: healthos-ingress
+  namespace: healthos
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - api.healthos.com
+    - healthos.com
+    secretName: healthos-tls
+  rules:
+  - host: api.healthos.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: healthos-api
+            port:
+              number: 80
+  - host: healthos.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: healthos-web
+            port:
+              number: 3001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: healthos-web
+  namespace: healthos
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3001
+    targetPort: 3001
+  selector:
+    app: healthos-web

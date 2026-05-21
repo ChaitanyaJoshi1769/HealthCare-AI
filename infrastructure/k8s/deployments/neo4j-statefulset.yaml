@@ -1,0 +1,88 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: neo4j-pvc
+  namespace: healthos
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: neo4j
+  namespace: healthos
+spec:
+  serviceName: neo4j
+  replicas: 1
+  selector:
+    matchLabels:
+      app: neo4j
+  template:
+    metadata:
+      labels:
+        app: neo4j
+    spec:
+      containers:
+      - name: neo4j
+        image: neo4j:5-enterprise
+        ports:
+        - containerPort: 7687
+          name: bolt
+        - containerPort: 7474
+          name: browser
+        env:
+        - name: NEO4J_AUTH
+          valueFrom:
+            secretKeyRef:
+              name: healthos-secrets
+              key: neo4j-auth
+        - name: NEO4J_PLUGINS
+          value: '["graph-data-science"]'
+        volumeMounts:
+        - name: neo4j-storage
+          mountPath: /var/lib/neo4j/data
+        - name: neo4j-logs
+          mountPath: /var/log/neo4j
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "500m"
+          limits:
+            memory: "8Gi"
+            cpu: "2000m"
+        livenessProbe:
+          exec:
+            command:
+            - cypher-shell
+            - -u
+            - neo4j
+            - -p
+            - $NEO4J_PASSWORD
+            - "RETURN 1"
+          initialDelaySeconds: 30
+          periodSeconds: 15
+      volumes:
+      - name: neo4j-storage
+        persistentVolumeClaim:
+          claimName: neo4j-pvc
+      - name: neo4j-logs
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: neo4j
+  namespace: healthos
+spec:
+  clusterIP: None
+  ports:
+  - port: 7687
+    name: bolt
+  - port: 7474
+    name: browser
+  selector:
+    app: neo4j
