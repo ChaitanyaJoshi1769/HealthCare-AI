@@ -8,6 +8,10 @@ import { initializeSchema } from './db/schema.js';
 import { registerAuthRoutes } from './routes/auth.js';
 import { registerAgentRoutes } from './routes/agents.js';
 import { registerPatientRoutes } from './routes/patients.js';
+import { registerGenomicsRoutes } from './routes/genomics.js';
+import { registerKnowledgeGraphRoutes } from './routes/knowledge-graph.js';
+import { registerTherapeuticDesignRoutes } from './routes/therapeutic-design.js';
+import { registerEnterpriseRoutes } from './routes/enterprise.js';
 import { ConsoleLogger, AppError, errorResponse } from '@healthos/shared';
 
 const logger = new ConsoleLogger();
@@ -59,6 +63,10 @@ try {
   await registerAuthRoutes(app);
   await registerPatientRoutes(app);
   await registerAgentRoutes(app);
+  await registerGenomicsRoutes(app);
+  await registerKnowledgeGraphRoutes(app);
+  await registerTherapeuticDesignRoutes(app);
+  await registerEnterpriseRoutes(app);
 
   // Start server
   await app.listen({ port: config.PORT, host: config.HOST });
