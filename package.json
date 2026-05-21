@@ -7,6 +7,15 @@
     "apps/*",
     "packages/*"
   ],
+  "keywords": [
+    "healthcare",
+    "AI",
+    "genomics",
+    "personalized-medicine",
+    "precision-medicine",
+    "therapeutic-design",
+    "enterprise"
+  ],
   "scripts": {
     "dev": "turbo run dev --parallel",
     "build": "turbo run build",

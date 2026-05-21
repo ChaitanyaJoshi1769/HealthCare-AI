@@ -1,0 +1,21 @@
+{
+  "name": "@healthos/knowledge-graph",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@healthos/types": "workspace:*",
+    "@healthos/shared": "workspace:*",
+    "neo4j-driver": "^5.13.0"
+  },
+  "devDependencies": {
+    "typescript": "workspace:*",
+    "@types/neo4j-driver": "^4.4.0"
+  }
+}
