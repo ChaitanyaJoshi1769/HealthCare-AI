@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@healthos/api/*": ["packages/api/src/*"],
+      "@healthos/db/*": ["packages/db/src/*"],
+      "@healthos/ai/*": ["packages/ai/src/*"],
+      "@healthos/shared/*": ["packages/shared/src/*"],
+      "@healthos/types/*": ["packages/types/src/*"]
+    }
+  },
+  "include": [],
+  "files": []
+}
