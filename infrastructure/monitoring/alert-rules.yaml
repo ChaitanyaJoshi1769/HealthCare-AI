@@ -1,0 +1,130 @@
+groups:
+- name: healthos-alerts
+  interval: 30s
+  rules:
+  
+  # API Performance Alerts
+  - alert: HighErrorRate
+    expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.01
+    for: 5m
+    labels:
+      severity: critical
+      component: api
+    annotations:
+      summary: "High error rate detected in API"
+      description: "Error rate is {{ $value | humanizePercentage }} (threshold: 1%)"
+
+  - alert: SlowAPIResponse
+    expr: histogram_quantile(0.95, http_request_duration_seconds) > 0.5
+    for: 5m
+    labels:
+      severity: warning
+      component: api
+    annotations:
+      summary: "Slow API response times detected"
+      description: "P95 latency is {{ $value }}s (threshold: 500ms)"
+
+  # Database Alerts
+  - alert: HighDatabaseConnections
+    expr: pg_stat_activity_count > 90
+    for: 5m
+    labels:
+      severity: warning
+      component: database
+    annotations:
+      summary: "High database connection count"
+      description: "Active connections: {{ $value }} (threshold: 90)"
+
+  - alert: DatabaseQueryTimeout
+    expr: rate(pg_stat_statements_mean_exec_time{query=~"SELECT.*"}[5m]) > 5000
+    for: 5m
+    labels:
+      severity: warning
+      component: database
+    annotations:
+      summary: "Slow database queries detected"
+      description: "Average query time: {{ $value }}ms"
+
+  # Redis Alerts
+  - alert: HighRedisMemory
+    expr: redis_memory_used_bytes / redis_memory_max_bytes > 0.85
+    for: 5m
+    labels:
+      severity: warning
+      component: redis
+    annotations:
+      summary: "High Redis memory usage"
+      description: "Memory usage: {{ $value | humanizePercentage }}"
+
+  - alert: RedisKeyEvictions
+    expr: rate(redis_evicted_keys_total[5m]) > 0
+    for: 5m
+    labels:
+      severity: critical
+      component: redis
+    annotations:
+      summary: "Redis is evicting keys due to memory"
+      description: "Eviction rate: {{ $value | humanize }} keys/sec"
+
+  # Neo4j Alerts
+  - alert: Neo4jHighCPU
+    expr: rate(neo4j_cpu_usage[5m]) > 0.8
+    for: 5m
+    labels:
+      severity: warning
+      component: neo4j
+    annotations:
+      summary: "High CPU usage in Neo4j"
+      description: "CPU usage: {{ $value | humanizePercentage }}"
+
+  # Node/Infrastructure Alerts
+  - alert: HighMemoryUsage
+    expr: container_memory_usage_bytes / container_spec_memory_limit_bytes > 0.9
+    for: 5m
+    labels:
+      severity: warning
+      component: infrastructure
+    annotations:
+      summary: "High memory usage in container {{ $labels.pod }}"
+      description: "Memory: {{ $value | humanizePercentage }}"
+
+  - alert: HighCPUUsage
+    expr: rate(container_cpu_usage_seconds_total[5m]) > 0.85
+    for: 5m
+    labels:
+      severity: warning
+      component: infrastructure
+    annotations:
+      summary: "High CPU usage in container {{ $labels.pod }}"
+      description: "CPU: {{ $value | humanizePercentage }}"
+
+  - alert: DiskSpaceLow
+    expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) < 0.1
+    for: 5m
+    labels:
+      severity: critical
+      component: infrastructure
+    annotations:
+      summary: "Low disk space on node {{ $labels.node }}"
+      description: "Available space: {{ $value | humanizePercentage }}"
+
+  # Kubernetes Alerts
+  - alert: PodCrashLooping
+    expr: rate(kube_pod_container_status_restarts_total[15m]) > 0.1
+    for: 5m
+    labels:
+      severity: critical
+      component: kubernetes
+    annotations:
+      summary: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} is crash looping"
+      description: "Restart rate: {{ $value | humanize }} restarts/sec"
+
+  - alert: PodNotReady
+    expr: kube_pod_status_ready{condition="false"} > 0
+    for: 10m
+    labels:
+      severity: warning
+      component: kubernetes
+    annotations:
+      summary: "Pod {{ $labels.pod }} is not ready"
+      description: "Pod has been unready for {{ $value }} seconds"
