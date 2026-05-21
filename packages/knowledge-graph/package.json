@@ -10,12 +10,11 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@healthos/types": "workspace:*",
-    "@healthos/shared": "workspace:*",
+    "@healthos/types": "*",
+    "@healthos/shared": "*",
     "neo4j-driver": "^5.13.0"
   },
   "devDependencies": {
-    "typescript": "workspace:*",
-    "@types/neo4j-driver": "^4.4.0"
+    "typescript": "*"
   }
 }

@@ -227,7 +227,7 @@ export interface ToolResult {
 // Clinical Knowledge Graph
 export interface GraphNode {
   id: string;
-  type: 'disease' | 'biomarker' | 'gene' | 'treatment' | 'symptom' | 'lifestyle' | 'study';
+  type: 'disease' | 'biomarker' | 'gene' | 'treatment' | 'symptom' | 'lifestyle' | 'study' | 'variant';
   name: string;
   snomedCode?: string;
   icdCode?: string;

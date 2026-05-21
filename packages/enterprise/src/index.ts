@@ -319,7 +319,7 @@ export interface FederatedLearningConfig {
   trainingStrategy: 'horizontal' | 'vertical' | 'federated_transfer';
   aggregationMethod: 'fedavg' | 'weighted' | 'secure_aggregation';
   participants: FederatedParticipant[];
-  privacyLevel: 'epsilon' as const;
+  privacyLevel: 'epsilon';
   epsilonValue: number;
   deltaValue: number;
 }

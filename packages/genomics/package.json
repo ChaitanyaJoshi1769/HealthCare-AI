@@ -10,11 +10,11 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@healthos/types": "workspace:*",
-    "@healthos/shared": "workspace:*",
+    "@healthos/types": "*",
+    "@healthos/shared": "*",
     "axios": "^1.6.0"
   },
   "devDependencies": {
-    "typescript": "workspace:*"
+    "typescript": "*"
   }
 }

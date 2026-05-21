@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "AI-native personalized healthcare intelligence platform and precision medicine OS",
   "private": true,
+  "packageManager": "npm@9.0.0",
   "workspaces": [
     "apps/*",
     "packages/*"
